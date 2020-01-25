@@ -1,3 +1,6 @@
+#IMPORTANTE: 
+#1) Utilize python 3
+#2) Instale a biblioteca de MQTT (paho-mqtt com o comando: sudo pip3 install paho-mqtt
 import paho.mqtt.client as mqtt
 import sys
 import random
@@ -17,8 +20,6 @@ mqtt_password = device_token
 # Callback - conexao ao Broker realizada
 def on_connect(client, userdata, flags, rc):
     print("[STATUS] Conectado ao Broker. Resultado de conexao: " + str(rc))
-    #faz subscribe automático no tópico
-    client.subscribe(topico_publish)
 
 # Programa principal
 try:
@@ -34,26 +35,26 @@ try:
         if (status_conexao_broker_tago_io > 0):
             client.connect(broker, porta_broker, keep_alive_broker)
 
-            # Gera temperatura e umidade aleatorias
-            temperatura = random.randint(20,40)
-            umidade = random.randint(20,70)
-            print "Temperatura gerada: " + str(temperatura) + "C"
-            print "Umidade gerada: " + str(umidade) + "%"
+        # Gera temperatura e umidade aleatorias
+        temperatura = random.randint(20,40)
+        umidade = random.randint(20,70)
+        print("Temperatura gerada: " + str(temperatura) + "C")
+        print("Umidade gerada: " + str(umidade) + "%")
             
-            # Prepara a formatacao dos dados coletados
-            temperatura_json = {"variable": "temperatura", "unit": "C", "value": temperatura}
-            umidade_json = {"variable": "umidade", "unit": "%", "value": umidade}
-            temperatura_json_string = json.dumps(temperatura_json)
-            umidade_json_string = json.dumps(umidade_json)
+        # Prepara a formatacao dos dados coletados
+        temperatura_json = {"variable": "temperatura", "unit": "C", "value": temperatura}
+        umidade_json = {"variable": "umidade", "unit": "%", "value": umidade}
+        temperatura_json_string = json.dumps(temperatura_json)
+        umidade_json_string = json.dumps(umidade_json)
             
-            # Envia dados corretamente formatados para o tago.io
-            client.publish(topico_publish, temperatura_json_string)
-            client.publish(topico_publish, umidade_json_string)
+        # Envia dados corretamente formatados para o tago.io
+        client.publish(topico_publish, temperatura_json_string)
+        client.publish(topico_publish, umidade_json_string)
 
         # Aguarda 05 segundos para proximo envio
         time.sleep(5)
 
 # Encerramento do programa (pressiona CTRL+C)
 except KeyboardInterrupt:
-    print "\nCtrl+C pressionado, encerrando aplicacao e saindo..."
+    print("\nCtrl+C pressionado, encerrando aplicacao e saindo...")
     sys.exit(0)
